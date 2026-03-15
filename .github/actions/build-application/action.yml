@@ -1,0 +1,35 @@
+name: Build Application
+
+
+runs:
+  using: composite
+
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+
+  - name: Set up Python 3.11
+    uses: actions/setup-python@v5
+    with: 
+      python-version: "3.11"
+
+  - name: Install poetry
+    uses: snok/install-poetry@v1
+    with:
+      virtualenvs-in-projects: true
+
+  - name: Cache Poetry dependencies
+    uses: actions/cache@v4
+    id: poetry-cache
+    with:
+      path: |
+        ~/.cache/pypoetry
+        .venv
+      key: poetry-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
+  - name: Install dependencies using poetry
+    if: steps.poetry-cache.outputs.cache-hit != 'true'
+    run: poetry run make install
+
+  - name: Lint with flake8
+    run: poetry run make check
