@@ -27,15 +27,17 @@ jobs:
         with:
           virtualenvs-in-projects: true
 
-      - name: Load cached venv
+      - name: Cache Poetry dependencies
         uses: actions/cache@v4
-        id: cached-poetry-dependencies
+        id: poetry-cache
         with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+          path: |
+            ~/.cache/pypoetry
+            .venv
+          key: poetry-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Install dependencies using poetry
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        if: steps.poetry-cache.outputs.cache-hit != 'true'
         run: poetry run make install
 
       - name: Lint with flake8
