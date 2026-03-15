@@ -40,3 +40,4 @@ jobs:
 
       - name: Lint with flake8
         run: poetry run make check
+        
