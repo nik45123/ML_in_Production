@@ -1,6 +1,5 @@
 name: Build Application
 
-
 runs:
   using: composite
 
@@ -30,6 +29,8 @@ runs:
   - name: Install dependencies using poetry
     if: steps.poetry-cache.outputs.cache-hit != 'true'
     run: poetry run make install
+    shell: bash 
 
   - name: Lint with flake8
     run: poetry run make check
+    shell: bash
